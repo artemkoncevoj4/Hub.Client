@@ -32,7 +32,6 @@ const handleRegister = () => {
 </template>
 
 <style scoped>
-/* Стили можно импортировать или временно продублировать, как в LoginView */
 .auth-container { max-width: 400px; margin: 50px auto; padding: 30px; border: 1px solid #ddd; border-radius: 8px; }
 .auth-form { display: flex; flex-direction: column; }
 .form-group { margin-bottom: 15px; }

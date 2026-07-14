@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 
-// Создаем реактивные переменные для полей формы
 const login = ref('')
 const password = ref('')
 

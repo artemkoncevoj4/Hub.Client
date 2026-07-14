@@ -5,17 +5,14 @@ import { createPinia } from 'pinia'
 import App from './App.vue'
 import router from './router'
 
-// 1. Импортируем PrimeVue и тему
 import PrimeVue from 'primevue/config'
 import Aura from '@primevue/themes/aura'
 
-// 2. Импортируем i18n
 import { createI18n } from 'vue-i18n'
 
-// 3. Создаем базовый словарь локализации
 const i18n = createI18n({
   legacy: false, // Обязательно для Vue 3 (Composition API)
-  locale: 'ru',  // Язык по умолчанию
+  locale: 'ru',
   fallbackLocale: 'en',
   messages: {
     ru: {
@@ -37,18 +34,18 @@ const i18n = createI18n({
 
 const app = createApp(App)
 
-// Регистрируем все наши "сервисы"
+
 app.use(createPinia())
 app.use(router)
 app.use(i18n)
 app.use(PrimeVue, {
     theme: {
-        preset: Aura, // Современная минималистичная тема
+        preset: Aura,
         options: {
             darkModeSelector: '.my-app-dark',
         }
     }
 })
 
-// Запускаем приложение
+
 app.mount('#app')
