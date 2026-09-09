@@ -6,13 +6,12 @@ import Card from 'primevue/card'
 
 const router = useRouter()
 
-// Интерактивный список твоих микросервисов
 const microservices = ref([
   {
     id: 'filevault',
     name: 'FileVault',
     description: 'Надежное облачное хранилище. Управляйте своими файлами безопасно и быстро.',
-    icon: 'pi pi-cloud', // Иконки встроены в PrimeVue
+    icon: 'pi pi-cloud',
     status: 'Доступно',
     route: '/filevault'
   },
@@ -89,6 +88,11 @@ const openService = (route: string) => {
   padding: 2rem;
   width: 100%;
 }
+.service-card :deep(.p-card-title),
+.service-card :deep(.p-card-content),
+.service-card :deep(.p-card-subtitle) {
+  color: white !important;
+}
 
 .hub-header {
   display: flex;
@@ -116,14 +120,12 @@ const openService = (route: string) => {
   gap: 1rem;
 }
 
-/* Настройка сетки (CSS Grid) для карточек */
 .services-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
   gap: 2rem;
 }
 
-/* Стилизация карточек PrimeVue */
 .service-card {
   background-color: var(--p-surface-800);
   border: 1px solid var(--p-surface-700);

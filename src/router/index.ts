@@ -9,7 +9,7 @@ const router = createRouter({
     {
       path: '/',
       name: 'home',
-      component: HomeView, // Теперь корень сайта открывает нашу новую страницу!
+      component: HomeView,
     },
     {
       path: '/login',

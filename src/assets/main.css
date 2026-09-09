@@ -12,3 +12,10 @@ body, html {
   display: flex;
   flex-direction: column;
 }
+
+:root {
+  --p-text-color: white;
+  --p-card-title-color: white;
+  --p-card-content-color: white;
+  --p-card-subtitle-color: white;
+}
