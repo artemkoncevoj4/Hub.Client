@@ -37,3 +37,7 @@ __screenshots__/
 
 # Vite
 *.timestamp-*-*.mjs
+# Окружение
+.env
+.env.*
+!.env.example

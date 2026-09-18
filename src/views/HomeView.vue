@@ -31,8 +31,7 @@ const goToLogin = () => {
 
 const openService = (route: string) => {
   if (route) {
-    // В будущем здесь будет переход к микросервису
-    console.log('Переход к:', route)
+    router.push('/filevault')
   }
 }
 </script>
