@@ -1,75 +1,94 @@
 <script setup lang="ts">
 import { ref } from 'vue'
+import { useRouter } from 'vue-router'
+import Card from 'primevue/card'
+import InputText from 'primevue/inputtext'
+import Password from 'primevue/password'
+import Button from 'primevue/button'
 
+const router = useRouter()
 const login = ref('')
 const password = ref('')
+const isLoading = ref(false)
+const errorMessage = ref('')
 
-const handleLogin = () => {
-  console.log('Отправка на бэкенд:', {
-    Login: login.value,
-    Password: password.value
-  })
-  // Сюда мы позже добавим реальный запрос к C# через fetch или axios
+const handleLogin = async () => {
+  isLoading.value = true
+  errorMessage.value = ''
+
+  try {
+    const response = await fetch('/api/auth/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include', // ОБЯЗАТЕЛЬНО: браузер сохранит HttpOnly Cookie
+      body: JSON.stringify({ login: login.value, password: password.value })
+    })
+
+    if (!response.ok) {
+      const err = await response.text()
+      throw new Error(err || 'Неверный логин или пароль')
+    }
+
+    router.push('/')
+  } catch (err: unknown) {
+    errorMessage.value = err instanceof Error ? err.message : 'Ошибка входа'
+  } finally {
+    isLoading.value = false
+  }
 }
 </script>
 
 <template>
-  <div class="auth-container">
-    <h2>Вход в систему</h2>
-    <form @submit.prevent="handleLogin" class="auth-form">
-      <div class="form-group">
-        <label for="login">Логин:</label>
-        <input v-model="login" type="text" id="login" required placeholder="Введите логин" />
-      </div>
+  <div class="auth-page">
+    <Card class="auth-card">
+      <template #title>
+        <div class="text-center">
+          <i class="pi pi-user-plus auth-icon"></i>
+          <h2 class="m-0">Вход в систему</h2>
+        </div>
+      </template>
 
-      <div class="form-group">
-        <label for="password">Пароль:</label>
-        <input v-model="password" type="password" id="password" required placeholder="Введите пароль" />
-      </div>
+      <template #content>
+        <form @submit.prevent="handleLogin" class="auth-form">
+          <p v-if="errorMessage" class="error-msg">{{ errorMessage }}</p>
 
-      <button type="submit" class="btn">Войти</button>
-    </form>
+          <div class="form-group">
+            <label for="login">Логин</label>
+            <InputText id="login" v-model="login" required placeholder="Введите логин" class="w-full" />
+          </div>
+
+          <div class="form-group">
+            <label for="password">Пароль</label>
+            <Password id="password" v-model="password" required placeholder="Введите пароль" :feedback="false" toggleMask class="w-full" inputClass="w-full" />
+          </div>
+
+          <Button type="submit" label="Войти" icon="pi pi-sign-in" :loading="isLoading" class="w-full mt-3" />
+        </form>
+      </template>
+
+      <template #footer>
+        <div class="text-center mt-3">
+          <span class="text-gray">Нет аккаунта? </span>
+          <a href="#" @click.prevent="router.push('/register')" class="auth-link">Зарегистрироваться</a>
+        </div>
+      </template>
+    </Card>
   </div>
 </template>
 
 <style scoped>
-.auth-container {
-  max-width: 400px;
-  margin: 50px auto;
-  padding: 30px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-}
-.auth-form {
-  display: flex;
-  flex-direction: column;
-}
-.form-group {
-  margin-bottom: 15px;
-}
-.form-group label {
-  display: block;
-  margin-bottom: 5px;
-  font-weight: bold;
-}
-.form-group input {
-  width: 100%;
-  padding: 8px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  box-sizing: border-box;
-}
-.btn {
-  padding: 10px;
-  background-color: #42b983;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  font-weight: bold;
-}
-.btn:hover {
-  background-color: #3aa876;
-}
+.auth-page { display: flex; justify-content: center; align-items: center; min-height: 80vh; padding: 2rem; }
+.auth-card { width: 100%; max-width: 420px; background-color: var(--p-surface-800); border: 1px solid var(--p-surface-700); color: white; }
+.auth-card :deep(.p-card-title) { color: white !important; }
+.auth-icon { font-size: 2.5rem; color: var(--p-primary-color); margin-bottom: 1rem; }
+.text-center { text-align: center; }
+.m-0 { margin: 0; }
+.mt-3 { margin-top: 1rem; }
+.w-full { width: 100%; }
+.auth-form { display: flex; flex-direction: column; gap: 1.2rem; margin-top: 1rem; }
+.form-group { display: flex; flex-direction: column; gap: 0.5rem; }
+.text-gray { color: #aaa; }
+.auth-link { color: var(--p-primary-color); text-decoration: none; font-weight: bold; }
+.error-msg { color: var(--p-red-400); margin: 0; font-size: 0.9rem; text-align: center; }
+:deep(.p-password > input) { width: 100%; }
 </style>
